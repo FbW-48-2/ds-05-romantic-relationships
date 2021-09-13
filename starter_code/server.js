@@ -1,8 +1,8 @@
 import express from "express"
-import mongoose from "mongoose"
 import "./db-connect.js" // connect to database
 import Customer from "./models/Costumer.js"
 import Order from "./models/Order.js"
+import Pizza from "./models/Pizza.js"
 
 const app = express()
 
@@ -10,12 +10,13 @@ const app = express()
 app.get('/', (req, res) => {
     res.send(`<h1>Hello from Pizza API</h1>
     <p><a href="/customers">/customers</a></p>
-    <p><a href="/orders">/orders</a></p>`);
+    <p><a href="/orders">/orders</a></p>
+    <p><a href="/pizzas">/pizzas</a></p>`);
 });
 
 app.get('/customers', async (req, res, next) => {
     try {
-        const customers = await Customer.find() // please fetch the customers from your database here, por favor!
+        const customers = await Customer.find()
         if (!customers) throw new Error(400, "No customers found");
         res.json(customers)
     } catch (error) {
@@ -25,9 +26,35 @@ app.get('/customers', async (req, res, next) => {
 
 app.get('/orders', async (req, res, next) => {
     try {
-        const orders = await Order.find() // please fetch the customers from your database here, por favor!
-        if (!orders) throw new Error(400, "No orders found");
-        res.json(orders)
+        // const orders = await Order.find().populate("pizzasId")
+        // const costumers = await Customer.find().populate("orderId")
+
+        const ordersWithUsersAndPizzas = await Customer.find()
+            .select('-_id address.city')
+            .populate({
+                path: 'orderId',
+                model: Order,
+                select: '-_id',
+                populate: {
+                    path: 'pizzasId items[0].pizza',
+                    model: Pizza,
+                    select: '-_id'
+                }
+            });
+
+        if (!ordersWithUsersAndPizzas) throw new Error(400, "No orders found");
+        res.json(ordersWithUsersAndPizzas)
+    } catch (error) {
+        next(error)
+    }
+})
+
+
+app.get('/pizzas', async (req, res, next) => {
+    try {
+        const pizzas = await Pizza.find()
+        if (!pizzas) throw new Error(400, "No pizzas found");
+        res.json(pizzas)
     } catch (error) {
         next(error)
     }

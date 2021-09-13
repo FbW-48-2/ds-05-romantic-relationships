@@ -3,6 +3,7 @@ import "./db-connect.js";
 import Customer from "./models/Costumer.js";
 import Order from "./models/Order.js"
 import faker from 'faker'
+import Pizza from "./models/Pizza.js";
 
 
 (async () => {
@@ -17,7 +18,15 @@ import faker from 'faker'
 
   try {
     await Order.deleteMany({})
-    console.log(`All orders are now in a better place... Cancun`);
+    console.log(`All orders are now in a better place... Acapulco`);
+  }
+  catch (error) {
+    console.log(error);
+  }
+
+  try {
+    await Pizza.deleteMany({})
+    console.log(`All pizzas are now in a better place... Puerto Escondido`);
   }
   catch (error) {
     console.log(error);
@@ -25,16 +34,35 @@ import faker from 'faker'
 
   try {
     // seed some customers...
-
-    // e.g. use insertMany to seed in an array of objects...
-    // example: await Customer.insertMany([ obj1, obj2 ]
-    // await insertMany will return an array of all inserted items
+    const pizzas = [
+      { name: "Margherita", price: 3.99 },
+      { name: "Diavolo", price: 4.99 },
+      { name: "Parma", price: 3.99 }
+    ]
+    const pizzasDB = await Pizza.create(pizzas)
 
     const orders = [
-      { order_date: '2021-09-12' },
-      { order_date: '2021-09-10' }
+      {
+        order_date: '2021-09-12',
+        items: [
+          {
+            pizza: pizzasDB[0],
+            quantity: 2
+          }
+        ],
+        pizzasId: [pizzasDB[0]]
+      },
+      {
+        order_date: '2021-09-11',
+        items: [
+          {
+            pizza: pizzasDB[2],
+            quantity: 3
+          }
+        ],
+        pizzasId: [pizzasDB[1], pizzasDB[2]]
+      }
     ]
-
     const ordersDB = await Order.create(orders)
 
 
@@ -63,7 +91,7 @@ import faker from 'faker'
     const customersDB = await Customer.create(costumersData)
 
     console.log("******************************************************************");
-    console.log(`${customersDB.length} customers created, ${ordersDB.length} orders created`);
+    console.log(`${customersDB.length} customers created, ${ordersDB.length} orders created, ${pizzasDB.length} pizzas created`);
     console.log("******************************************************************");
 
   }
