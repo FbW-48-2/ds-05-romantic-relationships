@@ -1,11 +1,20 @@
 import mongoose from "mongoose"
 const { Schema, model } = mongoose
 
-// ... Address Schema - create me here! ...
 
-const CustomerSchema = new Schema({ 
-  // ... customer schema fields go here
+const AddressSchema = new Schema({
+  street: {type: String, required: true},
+  zipcode: {type: String, required: true},
+  city: {type: String, required: true}
 })
+
+const CustomerSchema = new Schema({
+  firstname: {type: String, required: true},
+  lastname: {type: String, required: true},
+  address: {type: AddressSchema, required: true}
+}, {versionKey: false, timestamps: true})
+
+
 
 // named export
 export const Customer = model("Customer", CustomerSchema)
