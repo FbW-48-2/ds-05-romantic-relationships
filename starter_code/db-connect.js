@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose"
 
 // ESTABLISH DB CONNECTION
 mongoose.connect("mongodb://localhost/pizza_db", {

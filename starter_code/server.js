@@ -1,9 +1,10 @@
-const express = require("express")
-const mongoose = require("mongoose")
-const app = express()
-const { Customer } = require("./models")
+import express from "express"
+import mongoose from "mongoose"
+import "./db-connect.js" // connect to database
+import { Customer } from "./models.js"
 
-require("./db-connect") // connect to database
+const app = express()
+
 
 // STARTP API
 const port = 5000

@@ -1,6 +1,5 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose"
 const { Schema, model } = mongoose
-
 
 // ... Address Schema - create me here! ...
 
@@ -8,10 +7,7 @@ const CustomerSchema = new Schema({
   // ... customer schema fields go here
 })
 
+// named export
+export const Customer = model("Customer", CustomerSchema)
 
-const Customer = model("Customer", CustomerSchema)
-
-module.exports = { 
-  Customer 
-  // more models will be exported here...
-}
+// more models will be exported here soooon...
