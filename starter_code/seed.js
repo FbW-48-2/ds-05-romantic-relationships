@@ -1,7 +1,7 @@
-const mongoose = require("mongoose")
-const { Customer } = require("./models")
+import mongoose from "mongoose";
+import "./db-connect.js";
+import { Customer } from "./models.js";
 
-require("./db-connect");
 
 (async () => {    
     
