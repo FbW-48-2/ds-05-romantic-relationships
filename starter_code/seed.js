@@ -43,11 +43,11 @@ import Pizza from "./models/Pizza.js";
 
     const orders = await Order.insertMany([
       {order_date: "2021-9-13", 
-      customerId: customerDb[0],
+      customerInfo: customerDb[0],
       pizzas: [pizzaDb[0]]}, 
 
       {order_date: "2021-9-12", 
-      customerId: customerDb[1],
+      customerInfo: customerDb[1],
       pizzas: [pizzaDb[1], pizzaDb[2]] }]);
 
     const orderDb = await Order.create(orders);

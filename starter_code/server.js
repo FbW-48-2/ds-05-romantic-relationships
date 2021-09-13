@@ -29,7 +29,10 @@ app.get('/customers', async (req, res) => {
 })
 
 app.get('/orders', async(req, res)=> {
-    const orders = await Order.find();
+    const orders = await Order.find()
+    .populate({ path: 'customerInfo', select: 'address.city -_id'})
+    .populate({ path: 'pizzas', populate: {path: 'pizzas'}, select: '-_id'})
+    ;
     res.json(orders);
 })
 
