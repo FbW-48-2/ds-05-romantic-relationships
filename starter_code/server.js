@@ -1,8 +1,8 @@
 import express from "express"
 import mongoose from "mongoose"
 import "./db-connect.js" // connect to database
-import { Customer } from "./models.js"
-
+import Customer from "./models/Customer.js"
+import Order from "./models/Order.js"
 const app = express()
 
 
@@ -18,13 +18,19 @@ app.get('/', (req, res) => {
 });
 
 app.get('/customers', async (req, res) => {
-  const customers = [] // please fetch the customers from your database here, por favor!
-  res.json(customers) 
+    const customers = await Customer.find(); // please fetch the customers from your database here, por favor!
+    res.json(customers) 
 })
+
+app.get('/orders', async(req, res)=> {
+    const orders = await Order.find();
+    res.json(orders);
+})
+
 
 // GENERIC ERROR HANDLER
 app.use((err, req, res, next) => {
-    res.status(err.status || 500).send({error: {
+        res.status(err.status || 500).send({error: {
         message: err.message
     }})    
 })
