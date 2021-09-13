@@ -34,9 +34,9 @@ Adapt the mongoose connection string in file "db-connect.js"
 
 ## Seed it, baby
 
-Now we wanna initially our pizza_db with some initial data.
+Now we wanna feed our pizza_db with some initial data.
 
-Therefore we wanna create some customers.
+Therefore we wanna create - or "seed" (like we say in the DB world) - some customers.
 
 Find already a skeleton seed script in the file "seed.js".
 
