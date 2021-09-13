@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import faker from "faker";
 import "./db-connect.js";
-import { Customer } from "./models.js";
-
+import Customer from "./models/customer.js";
+import Order from "./models/order.js";
 
 (async () => {    
+  // Clear Customers
   try {
     await Customer.deleteMany( {} );
     console.log("All customers have been deleted");
@@ -12,6 +13,14 @@ import { Customer } from "./models.js";
     console.log( error );
   };
   
+  // Clear Orders
+  try {
+    await Order.deleteMany( {} );
+    console.log("All orders have been deleted");
+  } catch (error) {
+    console.log( error );
+  };
+
   // Create some customers with Faker API
   const customerPromises = Array(2)
   .fill(null)
@@ -31,12 +40,11 @@ import { Customer } from "./models.js";
     return customer.save();
   });
 
+  let customers = [];
+
   try {
     // seed some customers...
-    // e.g. use insertMany to seed in an array of objects...
-    // example: await Customer.insertMany([ obj1, obj2 ]
-    // await insertMany will return an array of all inserted items
-    await Promise.all( customerPromises );
+    customers = await Promise.all( customerPromises );
     console.log("----------------------------------------------");
     console.log(`All customers have been stored to the DB`);
     console.log("----------------------------------------------");
@@ -44,7 +52,32 @@ import { Customer } from "./models.js";
   // handle errors in seeding
   catch(err) { 
       console.log("[ERROR] Seeding failed: ", err)
+  };
+
+  const orderPromises = Array(2)
+  .fill(null)
+  .map(() => {
+    const orderData = {
+      order_date: faker.date.between("2021-09-11", "2021-09-13"),
+      customerID: faker.random.arrayElement( customers )
+    }
+    console.log(`Order from ${orderData.order_date} added to the database`);
+
+    const order = new Order( orderData );
+    return order.save();
+  });
+
+  try {
+    // seed some customers...
+    await Promise.all( orderPromises );
+    console.log("----------------------------------------------");
+    console.log(`All orders have been stored to the DB`);
+    console.log("----------------------------------------------");
   }
+  // handle errors in seeding
+  catch(err) { 
+      console.log("[ERROR] Seeding failed: ", err)
+  };
 
   // close connection to mongoose at end of seeding (otherwise our script will keep hanging...)
   mongoose.connection.close()
