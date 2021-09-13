@@ -3,6 +3,7 @@ import mongoose from "mongoose"
 import "./db-connect.js" // connect to database
 import Customer from "./models/Customer.js"
 import Order from "./models/Order.js"
+import Pizza from "./models/Pizza.js"
 const app = express()
 
 
@@ -16,6 +17,11 @@ app.listen(port, () => {
 app.get('/', (req, res) => {
     res.send("<h1>Hello from Pizza API</h1>");
 });
+
+app.get('/pizzas', async (req, res) => {
+    const pizzas = await Pizza.find(); 
+    res.json(pizzas) 
+})
 
 app.get('/customers', async (req, res) => {
     const customers = await Customer.find(); // please fetch the customers from your database here, por favor!

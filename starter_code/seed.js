@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import "./db-connect.js";
-import { Customer, Order } from "./models/models.js";
 import faker from 'faker';
+import Order from "./models/Order.js";
+import Customer from "./models/Customer.js"
+import Pizza from "./models/Pizza.js";
 
 (async function () {    
   mongoose.connect("mongodb://localhost/pizza_db", {
@@ -18,14 +20,39 @@ import faker from 'faker';
   try {
     await Order.deleteMany({});
     await Customer.deleteMany({});
+    await Pizza.deleteMany({});
 
-    const customers = await Customer.insertMany([{firstname: "shinhee", lastname: "chae", address: {street: "Kreuzbergstr.75", zipcode: "10965", city: "Berlin"}}, {firstname: "corey", lastname: "mason", address: {street: "Bergmannstr.1", zipcode: "10961", city: "Berlin"} }]);
+    const pizzas = await Pizza.insertMany([
+      {name: "Pomodoro", price: 5.99},
+      {name: "Supreme", price: 7.99},
+      {name: "Deluxe", price: 9.99}
+    ]);
+
+    const pizzaDb = await Pizza.create(pizzas);
+
+    const customers = await Customer.insertMany([
+      {firstname: "shinhee", 
+      lastname: "chae", 
+      address: {street: "Kreuzbergstr.75", zipcode: "10965", city: "Berlin"}}, 
+      
+      {firstname: "corey", 
+      lastname: "mason", 
+      address: {street: "Bergmannstr.1", zipcode: "10961", city: "Berlin"} }]);
     
     const customerDb = await Customer.create(customers);
 
-    const orders = await Order.insertMany([{order_date: "2021-9-13", customerId: customerDb[0] }, {order_date: "2021-9-12", customerId: customerDb[1] }]);
+    const orders = await Order.insertMany([
+      {order_date: "2021-9-13", 
+      customerId: customerDb[0],
+      pizzas: [pizzaDb[0]]}, 
+
+      {order_date: "2021-9-12", 
+      customerId: customerDb[1],
+      pizzas: [pizzaDb[1], pizzaDb[2]] }]);
 
     const orderDb = await Order.create(orders);
+
+  
     // const customerPromises = Array(10)
     //   .fill()
     //   .map(()=>{
