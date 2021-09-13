@@ -6,7 +6,7 @@ import { Customer } from "./models.js"
 const app = express()
 
 
-// STARTP API
+// START API
 const port = 5000
 app.listen(port, () => {
     console.log('Server started on port ' + port);
@@ -18,8 +18,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/customers', async (req, res) => {
-  const customers = [] // please fetch the customers from your database here, por favor!
-  res.json(customers) 
+  const customers = await Customer.find();
+  res.json( customers ); 
 })
 
 // GENERIC ERROR HANDLER
