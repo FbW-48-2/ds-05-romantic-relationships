@@ -14,12 +14,17 @@ const CustomerSchema = new Schema({
   // ... customer schema fields go here
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  address: { type: AddressSchema, required: true }
+  address: { type: AddressSchema, required: true },
+  orderId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Order'
+  }
 }, {
   versionKey: false
 })
 
 // named export
-export const Customer = model("Customer", CustomerSchema)
+const Customer = model("Customer", CustomerSchema)
 
-// more models will be exported here soooon...
+export default Customer
+
