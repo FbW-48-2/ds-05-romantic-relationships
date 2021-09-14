@@ -3,6 +3,7 @@ import faker from "faker";
 import "./db-connect.js";
 import Customer from "./models/customer.js";
 import Order from "./models/order.js";
+import Pizza from "./models/pizza.js";
 
 (async () => {    
   // Clear Customers
@@ -20,6 +21,15 @@ import Order from "./models/order.js";
   } catch (error) {
     console.log( error );
   };
+
+  // Clear Pizzas
+  try {
+    await Pizza.deleteMany( {} );
+    console.log("All pizzas have been deleted");
+  } catch (error) {
+    console.log( error );
+  };
+
 
   // Create some customers with Faker API
   const customerPromises = Array(2)
@@ -53,14 +63,45 @@ import Order from "./models/order.js";
   catch(err) { 
       console.log("[ERROR] Seeding failed: ", err)
   };
+  // --------------------------------------------------------------
+
+  const pizzaPromises = Array(3)
+  .fill(null)
+  .map(() => {
+    const pizzaData = {
+      name: faker.random.words(),
+      price: faker.commerce.price(6, 10, 2)
+    };
+    console.log(`${pizzaData.name} pizza added to the database`);
+
+    const pizza = new Pizza( pizzaData );
+    return pizza.save();
+  });
+
+  let pizzas = [];
+
+  try {
+    // seed some customers...
+    pizzas = await Promise.all( pizzaPromises );
+    console.log("----------------------------------------------");
+    console.log(`All pizzas have been stored to the DB`);
+    console.log("----------------------------------------------");
+  }
+  // handle errors in seeding
+  catch(err) { 
+      console.log("[ERROR] Seeding failed: ", err)
+  };
+  // --------------------------------------------------------------
+
 
   const orderPromises = Array(2)
   .fill(null)
   .map(() => {
     const orderData = {
       order_date: faker.date.between("2021-09-11", "2021-09-13"),
-      customerID: faker.random.arrayElement( customers )
-    }
+      customerID: faker.random.arrayElement( customers ),
+      pizzas: faker.random.arrayElement( pizzas )
+    };
     console.log(`Order from ${orderData.order_date} added to the database`);
 
     const order = new Order( orderData );
@@ -68,7 +109,7 @@ import Order from "./models/order.js";
   });
 
   try {
-    // seed some customers...
+    // seed some orders...
     await Promise.all( orderPromises );
     console.log("----------------------------------------------");
     console.log(`All orders have been stored to the DB`);

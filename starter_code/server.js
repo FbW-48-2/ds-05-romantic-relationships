@@ -1,11 +1,12 @@
 import express from "express"
-import mongoose from "mongoose"
 import "./db-connect.js" // connect to database
 import Customer from "./models/customer.js";
 import Order from "./models/order.js";
+import Pizza from "./models/pizza.js";
 
 const app = express();
 
+app.use( express.json() );
 
 // START API
 const port = 5000
@@ -26,6 +27,11 @@ app.get('/customers', async (req, res) => {
 app.get('/orders', async (req, res) => {
     const orders = await Order.find();
     res.json( orders );
+});
+
+app.get("/pizzas", async (req, res) => {
+    const pizzas = await Pizza.find();
+    res.json( pizzas );
 });
 
 // GENERIC ERROR HANDLER
