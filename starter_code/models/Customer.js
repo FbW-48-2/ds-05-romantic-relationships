@@ -10,7 +10,6 @@ const AddressSchema = new Schema({
   _id: false // => do not create IDs for nested contact info
 })
 
-
 const CustomerSchema = new Schema({ 
   firstname: {type: String, required: true},
   lastname: {type: String},
@@ -20,15 +19,7 @@ const CustomerSchema = new Schema({
 })
 
 // named export
-export const Customer = model("Customer", CustomerSchema)
 
-// more models will be exported here soooon...
+const Customer = model("Customer", CustomerSchema)
 
-const OrderSchema = new Schema({ 
-  order_date: {type: Date, required: true},
-  customer: {type: Schema.Types.ObjectId, ref: 'CustomerSchema'}
-  }, {
-  versionKey: false // => __v => we dont give a shi***
-})
-
-export const Order = model("Order", OrderSchema)
+export default Customer 
