@@ -37,7 +37,7 @@ app.get('/pizzas', async (req, res) => {
 
 app.get("/overview", async (req, res) => {
     const ordersAll = await Order.find()
-      .populate({path: "customer", select: "address.city -_id"}).populate({path: "pizza", select: "-_id"}) // => look up that userId from users collection and replace ID by user document
+      .populate({path: "customer", select: "address.city -_id"}).populate({path: "item.pizza", select: "-_id"}) // => look up that userId from users collection and replace ID by user document
   
     res.json( ordersAll )
   })

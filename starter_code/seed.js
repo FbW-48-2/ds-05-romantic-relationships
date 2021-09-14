@@ -65,13 +65,25 @@ try {
    {
       order_date: new Date(),
       customer: `${insertCustomer[0]._id}`,
-      pizza: ["613f59c15a620092f9e9a26f"]
+      item: [{
+        pizza: `${insertPizza[1]._id}`,
+        quantity: 2
+      }]
+      
     },
     {
       order_date: '2021-12-09' ,
       customer: `${insertCustomer[1]._id}`,
-      pizza: [`${insertPizza[0]._id}`, `${insertPizza[1]._id}`]
-    }]
+      item: [
+        {
+          pizza: `${insertPizza[1]._id}`,
+          quantity: 3
+        },
+        {
+          pizza: `${insertPizza[0]._id}`,
+          quantity: 1
+        }]
+  }]
   
   await Order.deleteMany()
   const insertOrder = await Order.insertMany(orders)
