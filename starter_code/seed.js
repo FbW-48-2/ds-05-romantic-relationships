@@ -69,10 +69,10 @@ import Pizza from "./models/pizza.js";
   .fill(null)
   .map(() => {
     const pizzaData = {
-      name: faker.random.words(),
+      name: "Pizza " + faker.random.word(1),
       price: faker.commerce.price(6, 10, 2)
     };
-    console.log(`${pizzaData.name} pizza added to the database`);
+    console.log(`${pizzaData.name} added to the database`);
 
     const pizza = new Pizza( pizzaData );
     return pizza.save();
@@ -100,7 +100,7 @@ import Pizza from "./models/pizza.js";
     const orderData = {
       order_date: faker.date.between("2021-09-11", "2021-09-13"),
       customerID: faker.random.arrayElement( customers ),
-      pizzas: faker.random.arrayElement( pizzas )
+      items: { pizza: faker.random.arrayElement( pizzas )._id, quantity: Math.ceil(Math.random() * 9)}
     };
     console.log(`Order from ${orderData.order_date} added to the database`);
 

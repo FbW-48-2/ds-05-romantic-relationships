@@ -25,7 +25,7 @@ app.get('/customers', async (req, res) => {
 });
 
 app.get('/orders', async (req, res) => {
-    const orders = await Order.find().populate("pizzas", "-_id").populate("customerID", "address.city");
+    const orders = await Order.find().populate("items.pizza", "-_id").populate("customerID", "address.city");
     res.json( orders );
 });
 
