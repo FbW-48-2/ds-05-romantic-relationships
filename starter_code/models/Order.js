@@ -19,11 +19,11 @@ const OrderItemSchema = new Schema({
 
 const OrderSchema = new Schema({
     order_date: { type: Date, required: true },
-    items: [OrderItemSchema],
-    pizzasId: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Pizza'
-    }]
+    customer: {
+        type: Schema.Types.ObjectId, 
+        ref:"Customer"
+    },
+    items: [OrderItemSchema]
 }, {
     versionKey: false
 })

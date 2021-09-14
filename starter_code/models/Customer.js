@@ -15,10 +15,6 @@ const CustomerSchema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   address: { type: AddressSchema, required: true },
-  orderId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Order'
-  }
 }, {
   versionKey: false
 })

@@ -1,6 +1,6 @@
 import express from "express"
 import "./db-connect.js" // connect to database
-import Customer from "./models/Costumer.js"
+import Customer from "./models/Customer.js"
 import Order from "./models/Order.js"
 import Pizza from "./models/Pizza.js"
 
@@ -26,21 +26,10 @@ app.get('/customers', async (req, res, next) => {
 
 app.get('/orders', async (req, res, next) => {
     try {
-        // const orders = await Order.find().populate("pizzasId")
-        // const costumers = await Customer.find().populate("orderId")
-
-        const ordersWithUsersAndPizzas = await Customer.find()
-            .select('-_id address.city')
-            .populate({
-                path: 'orderId',
-                model: Order,
-                select: '-_id',
-                populate: {
-                    path: 'pizzasId items[0].pizza',
-                    model: Pizza,
-                    select: '-_id'
-                }
-            });
+        const ordersWithUsersAndPizzas = await Order.find()
+        .select("-_id")
+        .populate({path: 'customer', model: Customer, select: '-_id address.city'})
+        .populate({path: 'items.pizza', model: Pizza, select: '-_id'})
 
         if (!ordersWithUsersAndPizzas) throw new Error(400, "No orders found");
         res.json(ordersWithUsersAndPizzas)

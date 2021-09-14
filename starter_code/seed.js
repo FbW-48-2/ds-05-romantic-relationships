@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import "./db-connect.js";
-import Customer from "./models/Costumer.js";
+import Customer from "./models/Customer.js";
 import Order from "./models/Order.js"
 import faker from 'faker'
 import Pizza from "./models/Pizza.js";
@@ -34,6 +34,22 @@ import Pizza from "./models/Pizza.js";
 
   try {
     // seed some customers...
+
+    const costumersData = Array(2).fill("🤪").map(()=>{
+      const costumer = {
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          address: {
+            street: faker.address.streetName(),
+            zipcode: faker.address.zipCode(),
+            city: faker.address.city()
+          } 
+        }
+      return costumer
+    })
+
+    const customersDB = await Customer.create(costumersData)
+
     const pizzas = [
       { name: "Margherita", price: 3.99 },
       { name: "Diavolo", price: 4.99 },
@@ -44,51 +60,30 @@ import Pizza from "./models/Pizza.js";
     const orders = [
       {
         order_date: '2021-09-12',
+        customer: customersDB[0],
         items: [
           {
             pizza: pizzasDB[0],
             quantity: 2
           }
         ],
-        pizzasId: [pizzasDB[0]]
       },
       {
         order_date: '2021-09-11',
+        customer: customersDB[1],
         items: [
           {
             pizza: pizzasDB[2],
             quantity: 3
+          },
+          {
+            pizza: pizzasDB[1],
+            quantity: 1
           }
         ],
-        pizzasId: [pizzasDB[1], pizzasDB[2]]
       }
     ]
     const ordersDB = await Order.create(orders)
-
-
-    const costumersData = [
-      {
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        address: {
-          street: faker.address.streetName(),
-          zipcode: faker.address.zipCode(),
-          city: faker.address.city()
-        },
-        orderId: ordersDB[0]
-      },
-      {
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        address: {
-          street: faker.address.streetName(),
-          zipcode: faker.address.zipCode(),
-          city: faker.address.city()
-        },
-        orderId: ordersDB[1]
-      }
-    ]
-    const customersDB = await Customer.create(costumersData)
 
     console.log("******************************************************************");
     console.log(`${customersDB.length} customers created, ${ordersDB.length} orders created, ${pizzasDB.length} pizzas created`);
